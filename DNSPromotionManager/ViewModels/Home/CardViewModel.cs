@@ -7,8 +7,7 @@ namespace DNSPromotionManager.ViewModels
 {
     public class CardViewModel
     {
-        public KeyValuePair<String, String> TableName;
-        public Dictionary<String, String> ColumnNames;
+        public String TableName;
         public Dictionary<String, String> Item;
     }
 }

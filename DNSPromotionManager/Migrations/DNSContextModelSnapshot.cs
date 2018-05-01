@@ -39,6 +39,27 @@ namespace DNSPromotionManager.Migrations
                     b.ToTable("Branchs");
                 });
 
+            modelBuilder.Entity("DNSPromotionManager.Models.BranchPromotion", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
+
+                    b.Property<string>("BranchId")
+                        .IsRequired();
+
+                    b.Property<string>("PromotionId")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
+
+                    b.HasIndex("PromotionId");
+
+                    b.ToTable("BranchPromotions");
+                });
+
             modelBuilder.Entity("DNSPromotionManager.Models.Characteristic", b =>
                 {
                     b.Property<string>("Id")
@@ -131,6 +152,56 @@ namespace DNSPromotionManager.Migrations
                     b.ToTable("Products");
                 });
 
+            modelBuilder.Entity("DNSPromotionManager.Models.ProductCharacteristic", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
+
+                    b.Property<string>("CharacteristicId")
+                        .IsRequired();
+
+                    b.Property<string>("CharacteristicValueId")
+                        .IsRequired();
+
+                    b.Property<string>("ProductId")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CharacteristicId");
+
+                    b.HasIndex("CharacteristicValueId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductCharacteristics");
+                });
+
+            modelBuilder.Entity("DNSPromotionManager.Models.ProductPrice", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
+
+                    b.Property<string>("BranchId")
+                        .IsRequired();
+
+                    b.Property<string>("ProductId")
+                        .IsRequired();
+
+                    b.Property<decimal>("Value")
+                        .HasColumnType("decimal(15, 2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductPrices");
+                });
+
             modelBuilder.Entity("DNSPromotionManager.Models.Promotion", b =>
                 {
                     b.Property<string>("Id")
@@ -154,24 +225,105 @@ namespace DNSPromotionManager.Migrations
                     b.ToTable("Promotions");
                 });
 
+            modelBuilder.Entity("DNSPromotionManager.Models.Residue", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36);
+
+                    b.Property<string>("BranchId")
+                        .IsRequired();
+
+                    b.Property<string>("ProductId")
+                        .IsRequired();
+
+                    b.Property<int>("Value");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Residues");
+                });
+
+            modelBuilder.Entity("DNSPromotionManager.Models.BranchPromotion", b =>
+                {
+                    b.HasOne("DNSPromotionManager.Models.Branch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("DNSPromotionManager.Models.Promotion", "Promotion")
+                        .WithMany()
+                        .HasForeignKey("PromotionId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("DNSPromotionManager.Models.CharacteristicValue", b =>
                 {
                     b.HasOne("DNSPromotionManager.Models.Characteristic", "Characteristic")
                         .WithMany()
                         .HasForeignKey("CharacteristicId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("DNSPromotionManager.Models.Product", b =>
                 {
                     b.HasOne("DNSPromotionManager.Models.Kind", "Kind")
-                        .WithMany()
+                        .WithMany("Products")
                         .HasForeignKey("KindId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("DNSPromotionManager.Models.Product", "Parent")
+                        .WithMany("Childrens")
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("DNSPromotionManager.Models.ProductCharacteristic", b =>
+                {
+                    b.HasOne("DNSPromotionManager.Models.Characteristic", "Characteristic")
                         .WithMany()
-                        .HasForeignKey("ParentId");
+                        .HasForeignKey("CharacteristicId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("DNSPromotionManager.Models.CharacteristicValue", "CharacteristicValue")
+                        .WithMany()
+                        .HasForeignKey("CharacteristicValueId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("DNSPromotionManager.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("DNSPromotionManager.Models.ProductPrice", b =>
+                {
+                    b.HasOne("DNSPromotionManager.Models.Branch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("DNSPromotionManager.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("DNSPromotionManager.Models.Residue", b =>
+                {
+                    b.HasOne("DNSPromotionManager.Models.Branch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("DNSPromotionManager.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618
         }

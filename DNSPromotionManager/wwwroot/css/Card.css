@@ -1,0 +1,4 @@
+﻿.cardbutton {
+    width: 100px;
+    margin-left: calc(50% - 50px);
+}

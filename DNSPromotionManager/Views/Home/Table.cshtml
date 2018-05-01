@@ -1,15 +1,27 @@
-﻿@model TableViewModel
+﻿@model Table
 
 @{
-    ViewData["Title"] = Model.TableName.Value;
+    ViewData["Title"] = Model.Caption;
 }
 
 <div id="modDialog" class="modal fade">
-    <div id="dialogContent" class="modal-dialog"></div>
-</div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <link rel="stylesheet" href="~/css/Loader.css" />
+                <link rel="stylesheet" href="~/css/Card.css" />
 
+                <button class="close" data-dismiss="modal" area-hidden="true">X</button>
+                <h4 id="CardTitle">Редактор</h4>
+            </div>
+            <div id="dialogContent" class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
 <div class="text-right">
-    @using (Html.BeginLink("Home", Model.TableName.Key + "Card", new { e = TableItemEvent.Create }, new { @class = "btn btn-success card" }))
+    @using (Html.BeginLink(Model.Name, "Card", new { e = TableItemEvent.Create },
+       new { @class = "btn btn-success card", @event = "create" }))
     {
         <span class="glyphicon glyphicon-plus"></span>
         <simpletext>Добавить</simpletext>
@@ -19,27 +31,35 @@
 <table class="table table-striped">
     <thead>
         <tr>
-            @foreach (var columnName in Model.ColumnNames)
+            @foreach (var column in Model.Columns)
             {
-                <th class="text-center">@columnName.Value</th>
+                if (column.IsVisible)
+                {
+                    <th class="text-center">@column.Caption</th>
+                }
             }
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var obj in Model.Table)
+        @foreach (DataRow obj in Model.Items.Rows)
         {
             <tr>
-                @foreach (var columnName in Model.ColumnNames)
+                @foreach (var column in Model.Columns)
                 {
-                    <td class="text-center">@obj[columnName.Key]</td>
+                    if (column.IsVisible)
+                    {
+                        <td class="text-center">@obj[column.Alias]</td>
+                    }
                 }
-                <td>
-                    @using (Html.BeginLink("Home", Model.TableName.Key + "Card", new { id = obj["Id"], e = TableItemEvent.Edit }, new { @class = "btn btn-info btn-sm card" }))
+                <td class="text-right">
+                    @using (Html.BeginLink(Model.Name, "Card", new { id = obj["Id"], e = TableItemEvent.Edit },
+                       new { @class = "btn btn-info btn-sm card", @event = "edit" }))
                     {
                         <span class="glyphicon glyphicon-pencil"></span>
                     }
-                    @using (Html.BeginLink("Home", Model.TableName.Key + "Card", new { id = obj["Id"], e = TableItemEvent.Delete }, new { @class = "btn btn-danger btn-sm card" }))
+                    @using (Html.BeginLink(Model.Name, "Card", new { id = obj["Id"], e = TableItemEvent.Delete },
+                       new { @class = "btn btn-danger btn-sm card", @event = "del" }))
                     {
                         <span class="glyphicon glyphicon-remove"></span>
                     }
@@ -52,23 +72,5 @@
 
 @section scripts
 {
-    <script type="text/javascript">
-
-        $(function () {
-            $.ajaxSetup({ cache: false });
-
-            $(".card").click(function (e) {
-                e.preventDefault();
-
-                $.get(this.href, function (data) {
-                    $('#modDialog').modal('show');
-                    $('#dialogContent').html(data);
-                    
-                });
-
-            });
-
-
-        })
-    </script>
+    <script src='@Url.Content("~/Scripts/Cards.js")'></script>
 }
