@@ -1,0 +1,45 @@
+﻿@model List<ProductViewModel>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th class="text-center">Название</th>
+            <th class="text-center">Вид</th>
+            <th class="text-center">Остаток</th>
+            <th class="text-center">Цена</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var obj in Model)
+        {
+            <tr>
+                <td class="text-center">@obj.Product.Name</td>
+                <td class="text-center">@obj.Product.Kind.Name</td>
+                <td class="text-center">@obj.Residue</td>
+                <td class="text-center">@obj.Price</td>
+                <td class="text-right">
+                    @using (Html.BeginLink("FatProducts", "Card", 
+                        new { e = TableItemEvent.Edit },
+                        new { @class = "btn btn-info btn-sm card", @event = "edit" }))
+                    {
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    }
+                    @using (Html.BeginLink("FatProducts", "Card", 
+                        new { e = TableItemEvent.Delete },
+                        new { @class = "btn btn-danger btn-sm card", @event = "del" }))
+                    {
+                        <span class="glyphicon glyphicon-remove"></span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@section scripts
+    {
+    <script src='@Url.Content("~/Scripts/Cards.js")'></script>
+}
+
