@@ -4,9 +4,13 @@
     "noEmitOnError": true,
     "removeComments": false,
     "sourceMap": true,
-    "target": "es5",
-    "outDir": "./wwwroot/Scripts/"
+    "target": "es5"
   },
-  "files": ["./wwwroot/Scripts/Cards.ts"],
+  "files": [
+
+    "./wwwroot/Scripts/FatProducts.ts",
+    "./wwwroot/Scripts/Cards.ts",
+    "./wwwroot/Scripts/Bag.ts"
+  ],
   "compileOnSave": true
 }

@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace DNSPromotionManager
 {
@@ -25,6 +26,12 @@ namespace DNSPromotionManager
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<DNSContext>(options => options.UseSqlServer(connection));
             services.AddMvc();
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
+                });
 
             TableManager.getInstance(connection);
         }

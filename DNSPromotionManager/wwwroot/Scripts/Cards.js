@@ -28,6 +28,7 @@ $(function () {
         }
         $('#modDialog').modal('show');
         $('#dialogContent').html(LoaderHtml());
+        console.log(this.href);
         $.get(this.href, function (data) {
             console.log(data);
             $('#dialogContent').html(data);

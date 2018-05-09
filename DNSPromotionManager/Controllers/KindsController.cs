@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using DNSPromotionManager.Models;
 using DNSPromotionManager.App_Code;
+using Microsoft.EntityFrameworkCore;
 
 namespace DNSPromotionManager.Controllers 
 {
@@ -16,6 +17,7 @@ namespace DNSPromotionManager.Controllers
         {
             db = context;
         }
+
         public IActionResult Card(String id, TableItemEvent e)
         {
             ViewBag.CardEvent = e;

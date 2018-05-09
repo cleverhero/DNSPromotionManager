@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using DNSPromotionManager.Models;
 using DNSPromotionManager.App_Code;
 using DNSPromotionManager.ViewModels;
+using Microsoft.AspNetCore.Http;
+using DNSPromotionManager.Queries;
 
 namespace DNSPromotionManager.Controllers
 {
@@ -20,43 +22,12 @@ namespace DNSPromotionManager.Controllers
 
         public IActionResult Index()
         {
-            var products = (from p in db.Products
-                            join kind in db.Kinds on p.KindId equals kind.Id
-                            join r in db.Residues on p.Id equals r.ProductId into rs
-                            join price in db.ProductPrices on p.Id equals price.ProductId into prices
-                            join c in db.ProductCharacteristics on p.Id equals c.ProductId into cs
-                            select new ProductViewModel
-                            {
-                                Product = new Product
-                                {
-                                    Id   = p.Id,
-                                    Name = p.Name,
-                                    Code = p.Code,
-                                    Parent = p.Parent,
-                                    Kind = kind
-                                },
-                                Residue = rs.FirstOrDefault().Value,
-                                Price = prices.FirstOrDefault().Value,
-                                Characteristics = cs.ToList()
-                           }
-                           ).ToList();
-
-            return View(products);
+            return View(ProductQueries.FatProducts(db));
         }
 
-        public IActionResult Card(String id, TableItemEvent e)
+        public IActionResult Card(FatProduct model, TableItemEvent e)
         {
-            var item = db.Products.Find(id ?? "");
-
-            var ParentVariants = db.Products.Where(i => i.Id != id).ToList();
-            ParentVariants.Insert(0, new Product() { Id = "", Name = "" });
-
-            ViewBag.CardEvent = e;
-
-            ViewBag.KindVariants = new SelectList(db.Kinds.ToList(), "Id", "Name", item);
-            ViewBag.ParentVariants = new SelectList(ParentVariants, "Id", "Name", item);
-
-            return PartialView("Card", item ?? new Product());
+            return PartialView("Card", model ?? new FatProduct());
         }
 
         [HttpPost]

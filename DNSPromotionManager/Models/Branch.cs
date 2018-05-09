@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 
+
+
 namespace DNSPromotionManager.Models
 {
     public class Branch

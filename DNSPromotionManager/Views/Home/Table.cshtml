@@ -58,11 +58,6 @@
                     {
                         <span class="glyphicon glyphicon-pencil"></span>
                     }
-                    @using (Html.BeginLink(Model.Name, "Card", new { id = obj["Id"], e = TableItemEvent.Delete },
-                       new { @class = "btn btn-danger btn-sm card", @event = "del" }))
-                    {
-                        <span class="glyphicon glyphicon-remove"></span>
-                    }
                 </td>
             </tr>
         }
@@ -72,5 +67,5 @@
 
 @section scripts
 {
-    <script src='@Url.Content("~/Scripts/Cards.js")'></script>
+    <script src='@Url.Content("~/js/Cards.js")'></script>
 }

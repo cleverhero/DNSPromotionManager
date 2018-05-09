@@ -13,16 +13,16 @@
     <tbody>
         @foreach (var obj in Model)
         {
-            <tr>
+            <tr id="@obj.Product.Id">
                 <td class="text-center">@obj.Product.Name</td>
                 <td class="text-center">@obj.Product.Kind.Name</td>
                 <td class="text-center">@obj.Residue</td>
                 <td class="text-center">@obj.Price</td>
                 <td class="text-right">
-                    <button class="btn btn-success btn-sm bag" id="@obj.Product.Id"
-                            onclick="AddItem(this, '@obj.Product.Id')">
+                    <button class="btn btn-danger btn-sm" id="@obj.Product.Id"
+                            onclick="DeleteFromBag(this, '@obj.Product.Id')">
                         <span class="glyphicon glyphicon-plus-sign"></span>
-                        Добавить в корзину
+                        Убрать из корзины
                     </button>
                 </td>
             </tr>
@@ -33,6 +33,6 @@
 
 @section scripts
 {
-    <script src='@Url.Content("~/Scripts/FatProducts.js")'></script>
+    <script src='@Url.Content("~/js/Bag.js")'></script>
 }
 

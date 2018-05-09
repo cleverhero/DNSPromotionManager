@@ -14,7 +14,9 @@
 
   <ItemGroup>
     <Content Remove="package.json" />
+    <Content Remove="wwwroot\Scripts\Bag.ts" />
     <Content Remove="wwwroot\Scripts\Cards.ts" />
+    <Content Remove="wwwroot\Scripts\FatProducts.ts" />
     <Content Remove="wwwroot\Scripts\typings\jquery\jquery.d.ts" />
   </ItemGroup>
 
@@ -41,6 +43,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="wwwroot\Scripts\Bag.ts" />
+    <TypeScriptCompile Include="wwwroot\Scripts\FatProducts.ts" />
     <TypeScriptCompile Include="wwwroot\Scripts\Cards.ts" />
   </ItemGroup>
 

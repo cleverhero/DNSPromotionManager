@@ -12,7 +12,7 @@ namespace DNSPromotionManager.App_Code
     static public class LinkHelper
     {
         static public Link BeginLink(
-            this IHtmlHelper html, 
+            this IHtmlHelper html,
             string controllerName,
             string actionName,
             object routeValues,
@@ -28,6 +28,7 @@ namespace DNSPromotionManager.App_Code
             }
             else
             {
+
                 var urlHelper = urlHelperFactory.GetUrlHelper(html.ViewContext);
                 action = urlHelper.Action(action: actionName, controller: controllerName, values: routeValues);
             }

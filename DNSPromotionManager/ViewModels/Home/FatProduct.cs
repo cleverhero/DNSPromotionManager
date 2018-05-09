@@ -6,7 +6,7 @@ using DNSPromotionManager.Models;
 
 namespace DNSPromotionManager.ViewModels
 {
-    public class ProductViewModel
+    public class FatProduct
     {
         public Product Product;
         public decimal Price;

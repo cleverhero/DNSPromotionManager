@@ -27,7 +27,5 @@ namespace DNSPromotionManager.Models
 
         [Required]
         public bool DelFlag { get; set; }
-
-        public IEnumerable<Product> Childrens { get; set; }
     }
 }
