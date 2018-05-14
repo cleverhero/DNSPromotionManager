@@ -12,6 +12,8 @@ namespace DNSPromotionManager.Models
 {
     public class DNSContext : DbContext
     {
+        public DbSet<User> Users { get; set; }
+        
         public DbSet<Kind> Kinds { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Branch> Branchs { get; set; }

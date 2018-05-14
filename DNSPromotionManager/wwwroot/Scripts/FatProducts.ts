@@ -103,6 +103,53 @@ function Remove(id: string) {
     return;
 }
 
+function FilterController() {
+    var filter = {
+        Name: ($('[name="Filter.Name"]')[0] as HTMLInputElement).value,
+        Code: ($('[name="Filter.Code"]')[0] as HTMLInputElement).value,
+        MinPrice: ($('[name="Filter.MinPrice"]')[0] as HTMLInputElement).value,
+        MaxPrice: ($('[name="Filter.MaxPrice"]')[0] as HTMLInputElement).value,
+        Characteristics: []
+    };
+
+    var charactericCount = (($('[name="filterpanel"]')[0] as HTMLInputElement)
+        .attributes["characteric-count"] as Attr).value;
+
+    for (var i = 0; i < Number(charactericCount); i++) {
+        var variants: Array<string> = [];
+        console.log('[name="characteristicpanel' + i.toString() + '"]');
+        var variantsCount = (($('[name="characteristicpanel'
+            + i.toString() + '"]')[0] as HTMLInputElement)
+            .attributes["variant-count"] as Attr).value;
+        var characteristic = (($('[name="characteristicpanel'
+            + i.toString() + '"]')[0] as HTMLInputElement)
+            .attributes["char-id"] as Attr).value;
+        for (var j = 0; j < Number(variantsCount); j++) {
+            var name = "Filter.Characteristics[" + i + "].Variants[" + j + "].IsSelected";
+            var variant = ($('[name="' + name + '"]')[0] as HTMLInputElement).value;
+            var isSelected = ($('[name="' + name + '"]')[0] as HTMLInputElement).checked;
+            if (isSelected) variants.push(variant)
+        }
+
+        if (variants.length > 0)
+            filter.Characteristics.push({
+                Id: characteristic,
+                Variants: variants
+            });
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "/FatProducts/Products",
+        data: 'JSONFilter=' + JSON.stringify(filter),
+        success: function (data) { document.body.innerHTML = data },
+        error: function (errmsg) { alert(errmsg); }
+    });
+
+
+}
+
+
 var href = "/Bag/GetProducts";
 console.log(href);
 

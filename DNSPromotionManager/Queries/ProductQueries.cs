@@ -30,6 +30,19 @@ namespace DNSPromotionManager.Queries
             return query.ToList();
         }
 
+        static public List<FatProduct> FatProducts(DNSContext db, Filter filter)
+        {
+            var query = FatProductsQuery(db);
+            if (filter == null) return query.ToList();
+
+            if (filter.Name != "") query = query.Where(item => item.Product.Name == filter.Name);
+            if (filter.Code != "") query = query.Where(item => item.Product.Code == filter.Code);
+            query = query.Where(item => item.Price >= filter.MinPrice);
+            query = query.Where(item => item.Price <= filter.MaxPrice);
+
+            return query.ToList();
+        }
+
         static private IQueryable<FatProduct> FatProductsQuery(DNSContext db)
         {
             return (from p in db.Products

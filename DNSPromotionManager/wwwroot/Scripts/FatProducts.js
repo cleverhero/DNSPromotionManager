@@ -84,6 +84,46 @@ function Remove(id) {
     }
     return;
 }
+function FilterController() {
+    var filter = {
+        Name: $('[name="Filter.Name"]')[0].value,
+        Code: $('[name="Filter.Code"]')[0].value,
+        MinPrice: $('[name="Filter.MinPrice"]')[0].value,
+        MaxPrice: $('[name="Filter.MaxPrice"]')[0].value,
+        Characteristics: []
+    };
+    var charactericCount = $('[name="filterpanel"]')[0]
+        .attributes["characteric-count"].value;
+    for (var i = 0; i < Number(charactericCount); i++) {
+        var variants = [];
+        console.log('[name="characteristicpanel' + i.toString() + '"]');
+        var variantsCount = $('[name="characteristicpanel'
+            + i.toString() + '"]')[0]
+            .attributes["variant-count"].value;
+        var characteristic = $('[name="characteristicpanel'
+            + i.toString() + '"]')[0]
+            .attributes["char-id"].value;
+        for (var j = 0; j < Number(variantsCount); j++) {
+            var name = "Filter.Characteristics[" + i + "].Variants[" + j + "].IsSelected";
+            var variant = $('[name="' + name + '"]')[0].value;
+            var isSelected = $('[name="' + name + '"]')[0].checked;
+            if (isSelected)
+                variants.push(variant);
+        }
+        if (variants.length > 0)
+            filter.Characteristics.push({
+                Id: characteristic,
+                Variants: variants
+            });
+    }
+    $.ajax({
+        type: "POST",
+        url: "/FatProducts/Products",
+        data: 'JSONFilter=' + JSON.stringify(filter),
+        success: function (data) { document.body.innerHTML = data; },
+        error: function (errmsg) { alert(errmsg); }
+    });
+}
 var href = "/Bag/GetProducts";
 console.log(href);
 $.get(href, function (ids) {

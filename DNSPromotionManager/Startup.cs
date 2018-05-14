@@ -69,6 +69,7 @@ namespace DNSPromotionManager
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {

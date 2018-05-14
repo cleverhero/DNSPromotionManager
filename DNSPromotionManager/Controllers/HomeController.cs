@@ -2,9 +2,8 @@
 using System.Linq;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using DNSPromotionManager.Models;
-using DNSPromotionManager.App_Code;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DNSPromotionManager.Controllers
 {
@@ -16,6 +15,8 @@ namespace DNSPromotionManager.Controllers
         {
             db = context;
         }
+
+        [Authorize]
         public IActionResult Index()
         {
             return View();

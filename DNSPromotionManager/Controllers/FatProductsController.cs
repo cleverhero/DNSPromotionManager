@@ -4,25 +4,59 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using DNSPromotionManager.Models;
-using DNSPromotionManager.App_Code;
 using DNSPromotionManager.ViewModels;
+using DNSPromotionManager.App_Code;
 using Microsoft.AspNetCore.Http;
 using DNSPromotionManager.Queries;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace DNSPromotionManager.Controllers
 {
     public class FatProductsController : Controller
     {
         DNSContext db;
+        Filter Filter;
 
         public FatProductsController(DNSContext context)
         {
             db = context;
+            Filter = new Filter()
+            {
+                MaxPrice = 1000
+            };
         }
 
-        public IActionResult Index()
+        public IActionResult Index(String JSONFilter)
         {
-            return View(ProductQueries.FatProducts(db));
+            if (JSONFilter != null) Filter = JsonConvert.DeserializeObject<Filter>(JSONFilter); ;
+
+            var productList = new ProductListModel
+            {
+                FatProducts = ProductQueries.FatProducts(db, Filter)
+            };
+
+            var characteristics = CharacteristicQueries.Characteristics(db);
+            foreach(var characteristic in characteristics)
+            {
+                List<SelectedVariant> variants = new List<SelectedVariant>();
+                var dbVariants = CharacteristicQueries.CharacteristicValues(db, characteristic.Id);
+                foreach (var variant in dbVariants)
+                    variants.Add(new SelectedVariant(variant.Id, variant.Name));
+
+                var characteristicModel = new CharacteristicModel(characteristic, variants);
+                productList.Filter.Characteristics.Add(characteristicModel);
+            }
+
+            ViewData["Filter"] = Filter;
+
+            return View(productList);
+        }
+
+        [HttpPost]
+        public IActionResult Products(String JSONFilter)
+        {
+            return RedirectToAction("Index", new { JSONFilter });
         }
 
         public IActionResult Card(FatProduct model, TableItemEvent e)

@@ -11,9 +11,10 @@ using System;
 namespace DNSPromotionManager.Migrations
 {
     [DbContext(typeof(DNSContext))]
-    partial class DNSContextModelSnapshot : ModelSnapshot
+    [Migration("20180509060504_Users")]
+    partial class Users
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

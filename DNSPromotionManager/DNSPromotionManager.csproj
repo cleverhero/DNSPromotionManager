@@ -17,7 +17,6 @@
     <Content Remove="wwwroot\Scripts\Bag.ts" />
     <Content Remove="wwwroot\Scripts\Cards.ts" />
     <Content Remove="wwwroot\Scripts\FatProducts.ts" />
-    <Content Remove="wwwroot\Scripts\typings\jquery\jquery.d.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,6 +31,7 @@
     <PackageReference Include="jquery.TypeScript.DefinitelyTyped" Version="3.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,10 +46,6 @@
     <TypeScriptCompile Include="wwwroot\Scripts\Bag.ts" />
     <TypeScriptCompile Include="wwwroot\Scripts\FatProducts.ts" />
     <TypeScriptCompile Include="wwwroot\Scripts\Cards.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\Scripts\typings\jquery\jquery.d.ts" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
