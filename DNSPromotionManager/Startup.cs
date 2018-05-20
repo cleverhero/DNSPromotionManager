@@ -8,6 +8,8 @@ using System.Globalization;
 using Microsoft.AspNetCore.Localization;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
 namespace DNSPromotionManager
 {
@@ -32,6 +34,9 @@ namespace DNSPromotionManager
                 {
                     options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
                 });
+
+            services.AddDistributedMemoryCache();
+            services.AddSession();
 
             TableManager.getInstance(connection);
         }
@@ -70,6 +75,7 @@ namespace DNSPromotionManager
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseAuthentication();
+            app.UseSession();
 
             app.UseMvc(routes =>
             {

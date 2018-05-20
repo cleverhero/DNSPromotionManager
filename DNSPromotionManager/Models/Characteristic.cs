@@ -16,5 +16,7 @@ namespace DNSPromotionManager.Models
         [StringLength(150)]
         [Required]
         public string Name { get; set; }
+
+        public List<CharacteristicValue> Variants { get; set; }
     }
 }

@@ -1,4 +1,6 @@
 ﻿/// <reference path="typings/jquery/jquery.d.ts" />
+/// <reference path="./FatProducts.ts" />
+
 function DeleteFromBag(btn, id: string) {
     $.ajaxSetup({ cache: false });
 
@@ -10,5 +12,6 @@ function DeleteFromBag(btn, id: string) {
     });
 
     $("tr#" + id).remove();
+    Remove(id);
     return false;
 }

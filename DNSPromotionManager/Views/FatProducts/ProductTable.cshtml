@@ -1,0 +1,51 @@
+﻿@model List<FatProduct>
+
+@{ 
+    var bag = ViewData["Bag"] as List<String>;
+    if (bag == null)
+    {
+        bag = new List<string>();
+    }
+
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th class="text-center">Название</th>
+            <th class="text-center">Вид</th>
+            <th class="text-center">Остаток</th>
+            <th class="text-center">Цена</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var obj in Model)
+        {
+            <tr>
+                <td class="text-center">@obj.Product.Name</td>
+                <td class="text-center">@obj.Product.Kind.Name</td>
+                <td class="text-center">@obj.Residue</td>
+                <td class="text-center">@obj.Price</td>
+                <td class="text-right">
+                    @if (bag.Contains(obj.Product.Id))
+                    {
+                        <button class="btn btn-danger btn-sm" id="@obj.Product.Id"
+                                onclick="DeleteItem(this, '@obj.Product.Id')">
+                            <span class='glyphicon glyphicon-minus-sign'></span>
+                            Убрать из корзины
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-success btn-sm" id="@obj.Product.Id"
+                                onclick="AddItem(this, '@obj.Product.Id')">
+                            <span class="glyphicon glyphicon-plus-sign"></span>
+                            Добавить в корзину
+                        </button>   
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

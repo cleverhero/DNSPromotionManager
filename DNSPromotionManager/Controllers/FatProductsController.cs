@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using DNSPromotionManager.Models;
 using DNSPromotionManager.ViewModels;
 using DNSPromotionManager.App_Code;
@@ -16,39 +15,27 @@ namespace DNSPromotionManager.Controllers
     public class FatProductsController : Controller
     {
         DNSContext db;
-        Filter Filter;
 
         public FatProductsController(DNSContext context)
         {
             db = context;
-            Filter = new Filter()
-            {
-                MaxPrice = 1000
-            };
         }
 
-        public IActionResult Index(String JSONFilter)
+        public IActionResult Index()
         {
-            if (JSONFilter != null) Filter = JsonConvert.DeserializeObject<Filter>(JSONFilter); ;
-
-            var productList = new ProductListModel
+            var productList = new ProductListModel()
             {
-                FatProducts = ProductQueries.FatProducts(db, Filter)
+                FatProducts = ProductQueries.FatProducts(db, null as Filter)
             };
 
-            var characteristics = CharacteristicQueries.Characteristics(db);
-            foreach(var characteristic in characteristics)
+            FilterData Data = new FilterData()
             {
-                List<SelectedVariant> variants = new List<SelectedVariant>();
-                var dbVariants = CharacteristicQueries.CharacteristicValues(db, characteristic.Id);
-                foreach (var variant in dbVariants)
-                    variants.Add(new SelectedVariant(variant.Id, variant.Name));
+                Characteristics = CharacteristicQueries.Characteristics(db),
+                Kinds           = KindQueries.Kinds(db)
+            };
 
-                var characteristicModel = new CharacteristicModel(characteristic, variants);
-                productList.Filter.Characteristics.Add(characteristicModel);
-            }
-
-            ViewData["Filter"] = Filter;
+            ViewData["FilterData"] = Data;
+            ViewData["Bag"] = GetBag();
 
             return View(productList);
         }
@@ -56,7 +43,12 @@ namespace DNSPromotionManager.Controllers
         [HttpPost]
         public IActionResult Products(String JSONFilter)
         {
-            return RedirectToAction("Index", new { JSONFilter });
+            Filter filter = JsonConvert.DeserializeObject<Filter>(JSONFilter);
+            var products = ProductQueries.FatProducts(db, filter);
+
+            ViewData["Bag"] = GetBag();
+
+            return PartialView("ProductTable", products);
         }
 
         public IActionResult Card(FatProduct model, TableItemEvent e)
@@ -87,6 +79,29 @@ namespace DNSPromotionManager.Controllers
                 return RedirectToAction("Tables", "Home", new { name = "Products" });
             }
             else return Content($"Поля не удовлетворяют условиям");
+        }
+
+        private List<String> GetBag()
+        {
+            if (User.Identity.IsAuthenticated)
+                return GetBagForUser();
+
+            if (Request.Cookies["Bag"] == null)
+                return new List<String>();
+
+            return GetBagForGuest();
+        }
+
+        private List<String> GetBagForGuest()
+        {
+            var str = Request.Cookies["Bag"];
+            var list = str.Split("#").ToList();
+            return list;
+        }
+
+        private List<String> GetBagForUser()
+        {
+            return null;
         }
 
         public IActionResult Error()

@@ -1,4 +1,5 @@
 /// <reference path="typings/jquery/jquery.d.ts" />
+/// <reference path="./FatProducts.ts" />
 function DeleteFromBag(btn, id) {
     $.ajaxSetup({ cache: false });
     var href = "/Bag/DeleteItemFromBag?ItemId=" + id;
@@ -7,6 +8,7 @@ function DeleteFromBag(btn, id) {
         console.log(data);
     });
     $("tr#" + id).remove();
+    Remove(id);
     return false;
 }
 //# sourceMappingURL=Bag.js.map

@@ -1,4 +1,20 @@
 ﻿/// <reference path="typings/jquery/jquery.d.ts" />
+/// <reference path="./Loader.ts" />
+
+class Characteristic {
+    Id: String;
+    Variants: Array<String>;
+}
+
+class Filter {
+    Name: String;
+    Code: String;
+    MinPrice: String;
+    MaxPrice: String;
+    Kinds: Array<String>;
+    Characteristics: Array<Characteristic>;
+}
+
 function OutBag(): string {
     return "<span class='glyphicon glyphicon-plus-sign'></span>\n" +
            "Добавить в корзину";
@@ -18,7 +34,7 @@ function AddItem(btn, id: string) {
     $.get(href, function (data) {
         console.log(data as boolean);
         if (data as boolean) Append(id);
-    });
+    }); 
 
     btn.innerHTML = InBag();
     btn.attributes["class"].textContent = "btn btn-danger btn-sm";
@@ -33,6 +49,12 @@ function apply(cookies: string[]) {
 }
 
 function Append(id: string) {
+    if (document.cookie == "") {
+        var cookies = ["Bag=" + id];
+        apply(cookies);
+        return;
+    }
+
     var cookies = document.cookie.split(";");
     for (var i = 0; i < cookies.length; i++) {
 
@@ -40,11 +62,11 @@ function Append(id: string) {
             name = parts[0],
             value = parts[1];
         if (name == "Bag") {
-            var ids = value.split(" ");
+            var ids = value.split("#");
             if (ids.indexOf(id) != -1) return;
 
             if (value == "") value = id;
-            else value = value += " " + id;
+            else value += "#" + id;
 
             cookies[i] = name + "=" + value;
             apply(cookies);
@@ -83,13 +105,15 @@ function Remove(id: string) {
         if (name == "Bag") {
             if (value == "") return;
 
-            var ids: string[] = value.split(" ");
+            var ids: string[] = value.split("#");
             console.log(ids);
             var IdInd = ids.indexOf(id);
             if (IdInd == -1) return;
 
             value = ids.reduce((ans, str, ind, arr): string => {
-                if (ind != IdInd) return ans + " " + str;
+                if (ind != IdInd)
+                    if (ans == "") return str;
+                    else ans + "#" + str;
                 return ans;
             }, "");
 
@@ -104,33 +128,46 @@ function Remove(id: string) {
 }
 
 function FilterController() {
-    var filter = {
-        Name: ($('[name="Filter.Name"]')[0] as HTMLInputElement).value,
-        Code: ($('[name="Filter.Code"]')[0] as HTMLInputElement).value,
-        MinPrice: ($('[name="Filter.MinPrice"]')[0] as HTMLInputElement).value,
-        MaxPrice: ($('[name="Filter.MaxPrice"]')[0] as HTMLInputElement).value,
+    var filter: Filter = {
+        Name: ($('[name="Name"]')[0] as HTMLInputElement).value,
+        Code: ($('[name="Code"]')[0] as HTMLInputElement).value,
+        MinPrice: ($('[name="MinPrice"]')[0] as HTMLInputElement).value,
+        MaxPrice: ($('[name="MaxPrice"]')[0] as HTMLInputElement).value,
+        Kinds: [],
         Characteristics: []
     };
 
-    var charactericCount = (($('[name="filterpanel"]')[0] as HTMLInputElement)
-        .attributes["characteric-count"] as Attr).value;
+
+    var kindCount = $('[name="kindpanel"]')[0]
+        .attributes["kind-count"].value;
+
+    for (var i = 0; i < Number(kindCount); i++) {
+        var name = "Kinds[" + i + "]";
+        var variant = ($('[name="' + name + '"]')[0] as HTMLInputElement).value;
+        var isSelected = ($('[name="' + name + '"]')[0] as HTMLInputElement).checked;
+
+        if (isSelected) filter.Kinds.push(variant);
+    }
+
+    var charactericCount = $('[name="filterpanel"]')[0]
+        .attributes["characteric-count"].value;
 
     for (var i = 0; i < Number(charactericCount); i++) {
-        var variants: Array<string> = [];
+        var variants = [];
         console.log('[name="characteristicpanel' + i.toString() + '"]');
-        var variantsCount = (($('[name="characteristicpanel'
-            + i.toString() + '"]')[0] as HTMLInputElement)
-            .attributes["variant-count"] as Attr).value;
-        var characteristic = (($('[name="characteristicpanel'
-            + i.toString() + '"]')[0] as HTMLInputElement)
-            .attributes["char-id"] as Attr).value;
+        var variantsCount = $('[name="characteristicpanel'
+            + i.toString() + '"]')[0]
+            .attributes["variant-count"].value;
+        var characteristic = $('[name="characteristicpanel'
+            + i.toString() + '"]')[0]
+            .attributes["char-id"].value;
         for (var j = 0; j < Number(variantsCount); j++) {
-            var name = "Filter.Characteristics[" + i + "].Variants[" + j + "].IsSelected";
+            var name = "Characteristics[" + i + "].Variants[" + j + "]";
             var variant = ($('[name="' + name + '"]')[0] as HTMLInputElement).value;
             var isSelected = ($('[name="' + name + '"]')[0] as HTMLInputElement).checked;
-            if (isSelected) variants.push(variant)
-        }
 
+            if (isSelected) variants.push(variant);
+        }
         if (variants.length > 0)
             filter.Characteristics.push({
                 Id: characteristic,
@@ -138,28 +175,15 @@ function FilterController() {
             });
     }
 
+    $("#table").html(LoaderHtml());
+
     $.ajax({
         type: "POST",
         url: "/FatProducts/Products",
-        data: 'JSONFilter=' + JSON.stringify(filter),
-        success: function (data) { document.body.innerHTML = data },
-        error: function (errmsg) { alert(errmsg); }
+        data: 'JSONFilter=' + JSON.stringify(filter)
+    }).fail(function (errmsg) {
+        alert(errmsg.statusText);
+    }).done(function (data) {
+        $("#table").html(data);
     });
-
-
 }
-
-
-var href = "/Bag/GetProducts";
-console.log(href);
-
-
-$.get(href, function (ids) {
-    for (var id of ids) {
-        var btn = $("#" + id)[0];
-
-        btn.innerHTML = InBag();
-        btn.attributes["class"].textContent = "btn btn-danger btn-sm";
-        btn.onclick = () => DeleteItem(btn, id);
-    }
-});

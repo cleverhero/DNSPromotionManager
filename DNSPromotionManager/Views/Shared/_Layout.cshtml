@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width" />
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/Loader.css" />
+    <link rel="stylesheet" href="~/css/Card.css" />
 </head>
 <body>
     <nav class="navbar navbar-default navbar-static-top" role="navigation">
@@ -65,6 +67,10 @@
     </environment>
 
 
+    <script src='@Url.Content("~/Scripts/Cards.js")'></script>
+    <script src='@Url.Content("~/Scripts/FatProducts.js")'></script>
+    <script src='@Url.Content("~/Scripts/Bag.js")'></script>
+    <script src='@Url.Content("~/Scripts/Loader.js")'></script>
 
     @RenderSection("Scripts", required: false)
     @Html.Partial("_ValidationScriptsPartial")

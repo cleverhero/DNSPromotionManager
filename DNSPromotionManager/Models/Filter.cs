@@ -17,12 +17,14 @@ namespace DNSPromotionManager.Models
         public Decimal MinPrice;
         public Decimal MaxPrice;
 
+        public List<String> Kinds;
         public List<CharacteristicFilter> Characteristics;
 
         public Filter()
         {
             Name = "";
             Code = "";
+            Kinds = new List<string>();
             Characteristics = new List<CharacteristicFilter>();
         }
     }

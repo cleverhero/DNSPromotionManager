@@ -17,6 +17,7 @@
     <Content Remove="wwwroot\Scripts\Bag.ts" />
     <Content Remove="wwwroot\Scripts\Cards.ts" />
     <Content Remove="wwwroot\Scripts\FatProducts.ts" />
+    <Content Remove="wwwroot\Scripts\Loader.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,6 +47,7 @@
     <TypeScriptCompile Include="wwwroot\Scripts\Bag.ts" />
     <TypeScriptCompile Include="wwwroot\Scripts\FatProducts.ts" />
     <TypeScriptCompile Include="wwwroot\Scripts\Cards.ts" />
+    <TypeScriptCompile Include="wwwroot\Scripts\Loader.ts" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">

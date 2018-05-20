@@ -1,0 +1,72 @@
+﻿@model FilterData
+
+<div name="filterpanel" class="col-md-2 well" characteric-count="@Model.Characteristics.Count">
+    <div>
+        <label class="control-label">Название:</label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+    <div>
+        <label class="control-label">Код:</label>
+        <input asp-for="Code" class="form-control" />
+    </div>
+    <div>
+        <label class="control-label">Цена от:</label>
+        <input asp-for="MinPrice" class="form-control" />
+    </div>
+    <div>
+        <label class="control-label">Цена до:</label>
+        <input asp-for="MaxPrice" class="form-control" />
+    </div>
+    <hr>
+    <div name=@("kindpanel") kind-count="@Model.Kinds.Count">
+        <label class="control-label">Виды:</label>
+        @for (int i = 0; i < Model.Kinds.Count; i++)
+        {
+            var kind = Model.Kinds[i];
+            <label class="checkbox col-sm-offset-4">
+                @{ 
+                    var name = "Kinds[" + i.ToString() + "]";
+                    <input name=@(name) id=@kind.Id value="@kind.Id" type="checkbox"> @kind.Name
+                }
+            </label>
+        }
+    </div>
+
+
+    @for (int i = 0; i < Model.Characteristics.Count; i++)
+    {
+        var characteristic = Model.Characteristics[i];
+        <hr>
+        <div name=@("characteristicpanel"+i.ToString())
+             char-id=@(characteristic.Id)
+             variant-count="@characteristic.Variants.Count">
+            <label class="control-label">@(characteristic.Name):</label>
+            @for (int j = 0; j < characteristic.Variants.Count; j++)
+            {
+                var variant = characteristic.Variants[j];
+                <label class="checkbox col-sm-offset-4">
+                    @{
+                        var name = "Characteristics[" +
+                              i.ToString() + "].Variants[" +
+                              j.ToString() + "]";
+                    }
+                    <input name=@(name)
+                           id=@('C' + variant.Id)
+                           value="@variant.Id"
+                           type="checkbox">
+                    @variant.Name
+                </label>
+            }
+        </div>
+
+    }
+    <div class="form-group">
+        <div class="col-sm-offset-3">
+            <button type="submit" class="btn btn-default" value="Save" onclick="FilterController()">
+                Принять?
+            </button>
+        </div>
+    </div>
+
+
+</div>

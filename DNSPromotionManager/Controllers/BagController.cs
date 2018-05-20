@@ -60,7 +60,7 @@ namespace DNSPromotionManager.Controllers
         private List<String> GetProductsForGuest()
         {
             var str = Request.Cookies["Bag"];
-            var list = str.Split(" ").ToList();
+            var list = str.Split("#").ToList();
             return list;
         }
 

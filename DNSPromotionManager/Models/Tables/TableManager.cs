@@ -39,7 +39,7 @@ namespace DNSPromotionManager.Models
                 AddColumn("DelFlag", "Товар удален");
 
             RegisterTable("Kinds", "Вид").
-                AddColumn("Id", "Id", false).
+                AddColumn("Id", "Id").
                 AddColumn("Code", "Код").
                 AddColumn("Name", "Название");
 
@@ -61,7 +61,7 @@ namespace DNSPromotionManager.Models
                 AddColumn("Name", "Название");
 
             RegisterTable("CharacteristicValues", "Значения характеристик").
-                AddColumn("Id", "Id", false).
+                AddColumn("Id", "Id").
                 AddColumn("Code", "Код").
                 AddColumn("Name", "Название").
                 AddColumn("CharacteristicId", "Характеристика", "Characteristics", "Id", "Characteristic", new String[] { "Name" });

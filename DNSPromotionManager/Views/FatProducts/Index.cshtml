@@ -1,98 +1,16 @@
-﻿@model ProductListModel
-
-@{ 
-    Model.Filter.Name = (ViewData["Filter"] as Filter).Name;
-    Model.Filter.Code = (ViewData["Filter"] as Filter).Code;
-    Model.Filter.MinPrice = (ViewData["Filter"] as Filter).MinPrice;
-    Model.Filter.MaxPrice = (ViewData["Filter"] as Filter).MaxPrice;
+﻿@{
+    var FilterData = ViewData["FilterData"] as FilterData;
+    FilterData.MaxPrice = 1000;
 }
 
 <div class="row">
-    <div name="filterpanel" class="col-md-2 well" characteric-count="@Model.Filter.Characteristics.Count">
-        <div>
-            <label class="control-label">Название:</label>
-            <input asp-for="Filter.Name" class="form-control" />
-        </div>
-        <div>
-            <label class="control-label">Код:</label>
-            <input asp-for="Filter.Code" class="form-control" />
-        </div>
-        <div>
-            <label class="control-label">Цена от:</label>
-            <input asp-for="Filter.MinPrice" class="form-control" />
-        </div>
-        <div>
-            <label class="control-label">Цена до:</label>
-            <input asp-for="Filter.MaxPrice" class="form-control" />
-        </div>
-
-        @for (int i = 0; i < Model.Filter.Characteristics.Count; i++)
-        {
-            var characteristic = Model.Filter.Characteristics[i];
-            <hr>
-            <div name=@("characteristicpanel"+i.ToString()) 
-                 char-id=@(characteristic.Id)
-                 variant-count="@characteristic.Variants.Count">
-                <label class="control-label">@(characteristic.Caption):</label>
-                @for(int j = 0; j < characteristic.Variants.Count; j++)
-                {
-                    var variant = characteristic.Variants[j];
-                    <label class="checkbox col-sm-offset-4">
-                        <input asp-for="Filter.Characteristics[i].Variants[j].IsSelected" 
-                               value="@variant.Id"
-                               type="checkbox"> @variant.Name
-                    </label>
-                }
-            </div>
-
-        }
-        <div class="form-group">
-            <div class="col-sm-offset-3">
-                <button type="submit" class="btn btn-default" value="Save" onclick="FilterController()">
-                    Принять?
-                </button>
-            </div>
-        </div>
-
+    @Html.Partial("../Filter.cshtml", FilterData)
+    <div id="table" class="col-md-10">
 
     </div>
-    <div class="col-md-10">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th class="text-center">Название</th>
-                    <th class="text-center">Вид</th>
-                    <th class="text-center">Остаток</th>
-                    <th class="text-center">Цена</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var obj in Model.FatProducts)
-                {
-                    <tr>
-                        <td class="text-center">@obj.Product.Name</td>
-                        <td class="text-center">@obj.Product.Kind.Name</td>
-                        <td class="text-center">@obj.Residue</td>
-                        <td class="text-center">@obj.Price</td>
-                        <td class="text-right">
-                            <button class="btn btn-success btn-sm bag" id="@obj.Product.Id"
-                                    onclick="AddItem(this, '@obj.Product.Id')">
-                                <span class="glyphicon glyphicon-plus-sign"></span>
-                                Добавить в корзину
-                            </button>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-
-
-        @section scripts
-            {
-            <script src='@Url.Content("~/Scripts/FatProducts.js")'></script>
-        }
-    </div>
-
 </div>
+
+@section Scripts {
+    <script>FilterController()</script>
+}
 

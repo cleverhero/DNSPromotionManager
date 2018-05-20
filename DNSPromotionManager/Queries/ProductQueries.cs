@@ -40,6 +40,17 @@ namespace DNSPromotionManager.Queries
             query = query.Where(item => item.Price >= filter.MinPrice);
             query = query.Where(item => item.Price <= filter.MaxPrice);
 
+            if (filter.Kinds.Count > 0)
+                query = query.Where(item => filter.Kinds.Contains(item.Product.Kind.Id));
+
+            foreach (var characteristic in filter.Characteristics) {
+                query = query.Where(item => 
+                    item.Characteristics
+                        .Select(c => characteristic.Variants.Contains(c.CharacteristicValueId))
+                        .Contains(true)
+                );
+            }
+
             return query.ToList();
         }
 

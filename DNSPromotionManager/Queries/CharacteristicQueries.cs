@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DNSPromotionManager.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DNSPromotionManager.Queries
 {
@@ -10,7 +11,7 @@ namespace DNSPromotionManager.Queries
     {
         static public List<Characteristic> Characteristics(DNSContext db)
         {
-            return db.Characteristics.ToList();
+            return db.Characteristics.Include(i => i.Variants).ToList();
         }
 
         static public List<CharacteristicValue> CharacteristicValues(DNSContext db, String CharacteristicId)
