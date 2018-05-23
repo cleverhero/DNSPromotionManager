@@ -1,0 +1,19 @@
+﻿.row {
+    padding: 0 10px;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.panel-heading {
+    font-size: 15px;
+}
+
+.panel-heading span {
+    margin-top: -20px;
+}
+
+.panel-body {
+    font-size: 13px;
+}
